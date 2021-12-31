@@ -2,10 +2,12 @@ from fastapi import Depends
 from pydantic import ValidationError
 from starlette.status import HTTP_403_FORBIDDEN
 
-from pol import res, config
 from pol.models import User
-from pol.depends import get_redis
-from pol.permission import Role
+from pol import res, config
+from pol.curd import NotFoundError
+from pol.depends import get_db, get_redis
+from pol.permission.roles import Role, GuestRole
+from pol.curd.user import User
 from pol.redis.json_cache import JSONRedis
 from pol.services.user_service import UserService
 from pol.api.v0.depends.auth.schema import HTTPBearer, OptionalHTTPBearer
@@ -15,19 +17,6 @@ OPTIONAL_API_KEY_HEADER = OptionalHTTPBearer()
 API_KEY_HEADER = HTTPBearer()
 
 
-class Guest(Role):
-    """this is a guest with only basic permission"""
-
-    def allow_nsfw(self) -> bool:
-        return False
-
-    def get_user_id(self) -> int:
-        return 0
-
-
-guest = Guest()
-
-
 async def optional_user(
     token: str = Depends(OPTIONAL_API_KEY_HEADER),
     service: UserService = Depends(UserService.new),
@@ -35,12 +24,13 @@ async def optional_user(
 ) -> Role:
     """
     if no auth header in request, return a guest object with only basic permission,
-    otherwise, return a authorized user.
+    otherwise, return an authorized user.
     """
     if not token:
-        return guest
+        return GuestRole()
 
-    return await get_current_user(token=token, redis=redis, service=service)
+    user = await get_current_user(token=token, redis=redis, service=service)
+    return user.to_role()
 
 
 async def get_current_user(
