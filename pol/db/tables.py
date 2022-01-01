@@ -804,7 +804,7 @@ class ChiiSubject(Base):
         order_by=ChiiSubjectRelations.rlt_order,
         lazy="raise_on_sql",
         back_populates="src_subject",
-    )
+    )  # type: ignore
 
     related: List[ChiiSubjectRelations] = relationship(
         "ChiiSubjectRelations",
@@ -814,7 +814,7 @@ class ChiiSubject(Base):
         ),
         lazy="raise_on_sql",
         back_populates="dst_subject",
-    )
+    )  # type: ignore
 
     users: List["ChiiSubjectInterest"] = relationship(
         "ChiiSubjectInterest",
@@ -829,11 +829,11 @@ class ChiiSubject(Base):
 
     @property
     def locked(self) -> bool:
-        return self.subject_ban == SubjectBanType.locked
+        return bool(self.subject_ban == SubjectBanType.locked)
 
     @property
     def ban(self) -> bool:
-        return self.subject_ban == SubjectBanType.ban
+        return bool(self.subject_ban == SubjectBanType.ban)
 
 
 class ChiiSubjectInterest(Base):
