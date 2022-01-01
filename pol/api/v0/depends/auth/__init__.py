@@ -4,10 +4,10 @@ from starlette.status import HTTP_403_FORBIDDEN
 
 from pol.models import User
 from pol import res, config
-from pol.curd.exceptions import NotFoundError
 from pol.depends import get_db, get_redis
-from pol.permission.roles import Role, GuestRole
 from pol.curd.user import User
+from pol.curd.exceptions import NotFoundError
+from pol.permission.roles import Role, GuestRole
 from pol.redis.json_cache import JSONRedis
 from pol.services.user_service import UserService
 from pol.api.v0.depends.auth.schema import HTTPBearer, OptionalHTTPBearer
