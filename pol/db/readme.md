@@ -1,1 +1,15 @@
 ORM 由 [sqlacodegen](https://github.com/agronholm/sqlacodegen) 生成，位于 `tables.py` 文件中。
+
+# 添加新orm
+
+1. 用 `sqlacodegen` 生成对应table的orm，添加到 `tables.py`
+  ```bash
+  #!/bin/env bash
+
+  table_name="chii_subject_topics" # example
+  set -a; source ../../env/dev; set +a
+  sqlacodegen --tables $table_name \
+    mysql+pymysql://"$MYSQL_USER":"$MYSQL_PASS"@"$MYSQL_HOST"/"$MYSQL_DB"
+
+  ```
+2. 添加relationship（注意双向）
