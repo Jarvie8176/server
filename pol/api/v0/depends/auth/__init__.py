@@ -7,7 +7,6 @@ from pol import res, config
 from pol.depends import get_db, get_redis
 from pol.curd.user import User
 from pol.curd.exceptions import NotFoundError
-from pol.permission.roles import Role, GuestRole
 from pol.redis.json_cache import JSONRedis
 from pol.services.user_service import UserService
 from pol.api.v0.depends.auth.schema import HTTPBearer, OptionalHTTPBearer
@@ -21,16 +20,15 @@ async def optional_user(
     token: str = Depends(OPTIONAL_API_KEY_HEADER),
     service: UserService = Depends(UserService.new),
     redis: JSONRedis = Depends(get_redis),
-) -> Role:
+) -> User:
     """
     if no auth header in request, return a guest object with only basic permission,
     otherwise, return an authorized user.
     """
     if not token:
-        return GuestRole()
+        return User.default_user()
 
-    user = await get_current_user(token=token, redis=redis, service=service)
-    return user.to_role()
+    return await get_current_user(token=token, redis=redis, service=service)
 
 
 async def get_current_user(
