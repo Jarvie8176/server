@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -46,3 +47,11 @@ class User(Role, BaseModel):
 
     def get_user_id(self) -> int:
         return self.id
+
+
+class GuestUser(Role, BaseModel):
+    def allow_nsfw(self) -> bool:
+        return False
+
+    def get_user_id(self) -> None:
+        return None

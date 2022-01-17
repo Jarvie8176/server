@@ -41,7 +41,7 @@ class ContentRelation:
 
 class DenialReasonType(enum.IntEnum):
     granted = 0
-    fallback = 1  # when no authz rule matches
+    noMatchedRules = 1
     deletedByUser = 2
     guidelineViolation = 3
     nsfw = 4

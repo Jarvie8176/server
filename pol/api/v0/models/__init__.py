@@ -172,11 +172,12 @@ class Pager(pydantic.BaseModel):
     offset: int = Field(0, ge=0)
 
     def check(self, total: int):
-        if self.offset >= total:
+        offset = self.offset
+        if offset >= total:
             raise RequestValidationError(
                 [
                     ErrorWrapper(
-                        ValueError(f"offset is too bigger for record count {total}"),
+                        ValueError(f"offset is greater than total: {offset}>{total}"),
                         loc=("query", "offset"),
                     )
                 ]

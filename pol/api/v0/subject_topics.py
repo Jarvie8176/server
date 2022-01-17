@@ -1,28 +1,27 @@
 from fastapi import Path, Depends
+
+from pol.api.v0.depends import get_subject
+from pol.http_cache.depends import CacheControl
+from pol.permission.roles import Role
 from subject import router, exception_404
 from fastapi.exceptions import RequestValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 from mypy.typeshed.stdlib.typing import List
 
 from pol import res
-from pol.models import ErrorDetail
+from pol.models import ErrorDetail, Subject
 from pol.depends import get_db
 from pol.curd.user import User
 from pol.db.tables import ChiiSubject
 from pol.api.v0.models.base import OffsetPagedResponse
 from pol.api.v0.depends.auth import optional_user
 from pol.api.v0.models.topic import Topic
-from pol.api.v0.depends.page.offset import OffsetPage
-
-MAX_PAGE = 1000
-MAX_PAGE_SIZE = 100
+from pol.api.v0.models import Paged
+from pol.api.v0.models import Pager as _Pager
 
 
-def get_subject_topics_page(*args) -> OffsetPage:
-    page = OffsetPage.from_request(*args)
-
-    if page.page > MAX_PAGE:
-        raise RequestValidationError()
+class Pager(_Pager):
+    pass
 
 
 @router.get(
@@ -36,16 +35,19 @@ def get_subject_topics_page(*args) -> OffsetPage:
     tags=["章节"],
 )
 async def get_subject_topics(
-    response: OffsetPagedResponse[Topic],
-    exc_404: res.HTTPException = Depends(exception_404),
-    subject_id: int = Path(..., gt=0),
-    user: User = Depends(optional_user),
     db: AsyncSession = Depends(get_db),
-    page_params: OffsetPage = Depends(get_subject_topics_page),
+    subject_id: int = Query(..., gt=0),
+    subject: Subject = Depends(get_subject),
+    page: Pager = Depends(),
+    cache_control: CacheControl = Depends(CacheControl),
+    user: Role = Depends(optional_user),
 ):
     # todo: cache metadata of each topic (reply count, last reply timestamp)
 
     # sanity check
+
+
+    subject =
 
     subject = (
         await db.query(ChiiSubject).filter(ChiiSubject.subject_id == subject_id).one()

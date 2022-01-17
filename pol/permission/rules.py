@@ -48,4 +48,4 @@ def can_view_topic(
     if topic_perms.displayStatus == TopicDisplayStatusType.normal:
         return True, DenialReasonType.granted
 
-    return False, DenialReasonType.fallback
+    return False, DenialReasonType.noMatchedRules
