@@ -2,11 +2,10 @@ from fastapi import Depends
 from pydantic import ValidationError
 from starlette.status import HTTP_403_FORBIDDEN
 
-from pol.models import User
 from pol import res, config
-from pol.depends import get_db, get_redis
+from pol.models import User
+from pol.depends import get_redis
 from pol.curd.user import User
-from pol.curd.exceptions import NotFoundError
 from pol.models.user import GuestUser
 from pol.redis.json_cache import JSONRedis
 from pol.services.user_service import UserService

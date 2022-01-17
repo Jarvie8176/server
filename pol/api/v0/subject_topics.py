@@ -1,23 +1,22 @@
 from fastapi import Path, Depends
-
-from pol.api.v0.depends import get_subject
-from pol.http_cache.depends import CacheControl
-from pol.permission.roles import Role
 from subject import router, exception_404
 from fastapi.exceptions import RequestValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 from mypy.typeshed.stdlib.typing import List
 
 from pol import res
-from pol.models import ErrorDetail, Subject
+from pol.models import Subject, ErrorDetail
 from pol.depends import get_db
 from pol.curd.user import User
 from pol.db.tables import ChiiSubject
-from pol.api.v0.models.base import OffsetPagedResponse
-from pol.api.v0.depends.auth import optional_user
-from pol.api.v0.models.topic import Topic
 from pol.api.v0.models import Paged
 from pol.api.v0.models import Pager as _Pager
+from pol.api.v0.depends import get_subject
+from pol.permission.roles import Role
+from pol.api.v0.models.base import OffsetPagedResponse
+from pol.http_cache.depends import CacheControl
+from pol.api.v0.depends.auth import optional_user
+from pol.api.v0.models.topic import Topic
 
 
 class Pager(_Pager):

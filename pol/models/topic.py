@@ -1,14 +1,10 @@
-import datetime
-from typing import Optional
-
-from pydantic import Field, BaseModel
+from pydantic import BaseModel
 
 from pol.models import Subject
 
 
 class Topic(BaseModel):
     subject: Subject
-    pass
 
 
 class TopicReply(BaseModel):

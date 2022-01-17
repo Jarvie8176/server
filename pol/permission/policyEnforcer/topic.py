@@ -1,5 +1,5 @@
-from pol.models.topic import Topic
 from pol.permission import Role
+from pol.models.topic import Topic
 from pol.permission.rules import can_view_topic
 
 
